@@ -1,14 +1,20 @@
 import { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import RoleTable from '../components/RoleTable';    
 import UserTable from '../components/UserTable';     
 
 const Dashboard = () => {
     const [activeTab, setActiveTab] = useState('users'); 
+    const navigate = useNavigate();
 
     return (
         <div>
             <h1>Dashboard</h1>
-            <div style={{ marginBottom: '1rem' }}>
+            <div>
+                <button onClick={() => navigate('/roles/new')}>Create new role</button>
+                <button onClick={() => navigate('/users/new')}>Create new user</button>
+            </div>
+            <div>
                 <button
                     onClick={() => setActiveTab('users')}
                     style={{ marginRight: '1rem', fontWeight: activeTab === 'users' ? 'bold' : 'normal' }}

@@ -1,15 +1,5 @@
 const { sequelize, User, Role } = require('../modles');
 
-// const getAllUser = async (req, res) => {
-//     try {
-//         const users = await User.findAll();
-//         res.json(users);
-//     } catch (err) {
-//         console.error('Error fetching users', err);
-//         res.status(500),json({ error: 'Failed to fetch all users.' });
-//     }
-// };
-
 const getAllUser = async (req, res) => {
     try {
         const users = await User.findAll({
@@ -32,18 +22,32 @@ const getAllUser = async (req, res) => {
     }
 };
 
+// const getUserById = async (req, res) => {
+//     try {
+//         const user = await User.findByPk(req.params.id);
+//         if (!user) return res.status(404).json({ error: 'User not found.' });
+
+//         const [results] = await sequelize.query(
+//             'select * from users where user_id = ?',
+//             { replacements: [user.user_id] }
+//         );
+//     } catch (err) {
+//         console.error('Error fetching user by ID.', err);
+//         res.status(500).json({ error: 'Failed to fetch user by ID.' });
+//     }
+// };
+
 const getUserById = async (req, res) => {
     try {
-        const user = await User.findByPk(req.params.id);
+        const user = await User.findByPk(req.params.id, {
+            include: Role, 
+        });
         if (!user) return res.status(404).json({ error: 'User not found.' });
 
-        const [results] = await sequelize.query(
-            'select * from users where user_id = ?',
-            { replacements: [user.id] }
-        );
+        return res.json(user);
     } catch (err) {
-        console.error('', err);
-        res.status(500),json({ error: '' });
+        console.error('Error fetching user by ID.', err);
+        res.status(500).json({ error: 'Internal server error' });
     }
 };
 
@@ -78,7 +82,7 @@ const createUser = async (req, res) => {
             }
         );
 
-        const privileges = privResult.map(p => privilege).join(', ');
+        const privileges = privResult.map(p => p.privilege).join(', ');
 
         await sequelize.query(
             `create user '${username}'@'localhost' identified by '${password}'`,
@@ -101,7 +105,7 @@ const createUser = async (req, res) => {
         }
 
         console.error('Error creating user.', err);
-        res.status(500),json({ error: 'Failed to create user.' });
+        res.status(500).json({ error: 'Failed to create user.' });
     }
 };
 

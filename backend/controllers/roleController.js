@@ -1,34 +1,5 @@
 const { sequelize, Role } = require('../modles');
 
-const getAllRole = async (req, res) => {
-    try {
-        const roles = await Role.findAll();
-        res.json(roles);
-    } catch (err) {
-        console.error('Error fetching roles.', err);
-        res.status(500).json({ error: 'Failed to fetch all role.' });
-    }
-};
-
-const getRoleById = async (req, res) => {
-    try {
-        const role = await Role.findByPk(req.params.id);
-        if (!role) return res.status(404).json({ error: 'Role not found.' });
-
-        const [results] = await sequelize.query(
-            'select privilege from role_privilege where role_id = ?',
-            { replacements: [role.id] }
-        );
-
-        const privileges = results.map(row => row.privilege);
-
-        res.json({ ...role.toJSON(), privileges})
-    } catch (err) {
-        console.error('Error fetching role.', err);
-        res.status(500).json({ error: 'Failed to fetch role by ID.' });
-    }
-};
-
 const getAllRolesWithPrivileges = async (req, res) => {
     try {
         const [roles] = await sequelize.query(`
@@ -51,6 +22,25 @@ const getAllRolesWithPrivileges = async (req, res) => {
     }
 };
 
+const getRoleById = async (req, res) => {
+    try {
+        const role = await Role.findByPk(req.params.id);
+        if (!role) return res.status(404).json({ error: 'Role not found.' });
+
+        const [results] = await sequelize.query(
+            'select privilege from role_privilege where role_id = ?',
+            { replacements: [role.role_id] }
+        );
+
+        const privileges = results.map(row => row.privilege);
+
+        res.json({ ...role.toJSON(), privileges})
+    } catch (err) {
+        console.error('Error fetching role by ID.', err);
+        res.status(500).json({ error: 'Failed to fetch role by ID.' });
+    }
+};
+
 const createRole = async (req, res) => {
     const { name, privileges = [] } = req.body;
     const t = await sequelize.transaction();
@@ -69,7 +59,7 @@ const createRole = async (req, res) => {
         for (const priv of privileges) {
             await sequelize.query(
                 'insert into role_privilege (role_id, privilege) values (?, ?)',
-                { replacements: [newRole.id, priv], transaction: t }
+                { replacements: [newRole.role_id, priv], transaction: t }
             );
         }
 
@@ -144,7 +134,7 @@ const updateRole = async (req, res) => {
         );
 
         await sequelize.query(
-            'delele from role_privilege where role_id = ?',
+            'delete from role_privilege where role_id = ?',
             { replacements: [role.role_id], transaction: t }
         );
 
@@ -202,9 +192,8 @@ const deleteRole = async (req, res) => {
 };
 
 module.exports = {
-    getAllRole,
-    getRoleById,
     getAllRolesWithPrivileges,
+    getRoleById,
     createRole,
     updateRole,
     deleteRole

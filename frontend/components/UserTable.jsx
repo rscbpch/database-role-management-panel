@@ -1,17 +1,19 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import { fetchUsers } from '../services/api'
+import { useNavigate } from "react-router-dom";
 
 const UserTable = () => {
     const [users, setUsers] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get('http://localhost:3000/users')
-             .then(res => setUsers(res.data))
-             .catch(err => console.error('Error fetching users.', err));
+        fetchUsers()
+            .then(data => setUsers(data))
+            .catch(err => console.error('Error fetching users', err));
     }, []);
 
     return (
-        <table>
+        <table border="1" cellPadding="10" cellSpacing="0" style={{ width: '100%' }}> 
             <thead>
                 <tr>
                     <th>ID</th>
@@ -21,17 +23,20 @@ const UserTable = () => {
                 </tr>
             </thead>
             <tbody>
-                {users.map(user => (
-                    <tr key={user.id}>
-                        <td>{user.id}</td>
-                        <td>{user.username}</td>
-                        <td>{user.role}</td>
-                        <td>
-                            <button>Edit</button>
-                            <button>Delete</button>
-                        </td>
-                    </tr>
-                ))}
+                {users.length === 0 ? (
+                    <tr><td colSpan="4">No users found.</td></tr>
+                ) : (users.map(user => (
+                        <tr key={user.id}>
+                            <td>{user.id}</td>
+                            <td>{user.username}</td>
+                            <td>{user.role}</td>
+                            <td>
+                                <button onClick={() => navigate(`/users/edit/${user.id}`)}>Edit</button>
+                                <button onClick={() => navigate('')}>Delete</button>
+                            </td>
+                        </tr>
+                    ))
+                )}
             </tbody>
         </table>
     );
