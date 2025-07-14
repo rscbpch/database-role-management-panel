@@ -1,9 +1,9 @@
 import { Routes, Route } from 'react-router-dom';
-import Dashboard from '../pages/Dashboard';
-import CreateRole from '../pages/CreateRole';
-import CreateUser from '../pages/CreateUser';
-import EditRole from '../pages/EditRole';
-import EditUser from '../pages/EditUser';
+import Dashboard from './pages/Dashboard';
+import CreateRole from './pages/CreateRole';
+import CreateUser from './pages/CreateUser';
+import EditRole from './pages/EditRole';
+import EditUser from './pages/EditUser';
 
 const App = () => {
     return (

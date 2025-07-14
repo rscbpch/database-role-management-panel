@@ -39,14 +39,20 @@ const RoleForm = () => {
             }
             navigate('/');
         } catch (err) {
-            setError('Something went wrong.');
+            if (err.response?.status === 409) {
+                setError('Role name already exists.');
+            } else if (err.response?.data?.error) {
+                setError(err.response.data.error);
+            } else {
+                setError('Something went wrong.');
+            }
         }
     };
 
     return (
         <div>
-            <h2>{id ? 'Edit Role' : 'Create Role'}</h2>
-            {error && <p>{error}</p>}
+            <h2>{id ? 'Edit role' : 'Create role'}</h2>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
             <form onSubmit={handleSubmit}>
                 <label>Role name:</label>
                 <input 
@@ -58,7 +64,7 @@ const RoleForm = () => {
                 <div>
                     <p>Privileges:</p>
                     {allPrivileges.map(priv => (
-                        <label key={priv}>
+                        <label key={priv} style={{ display: 'block' }}>
                             <input 
                                 type="checkbox" 
                                 checked={privileges.includes(priv)}

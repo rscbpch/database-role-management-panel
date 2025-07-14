@@ -22,14 +22,16 @@ const UserForm = () => {
                     setUsername(data.username);
                     setRoleId(data.role_id);
                 })
-                .catch(() => setError('failed to load user.'));
+                .catch(() => setError('Failed to load user.'));
         }
     }, [id]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const data = { username, password, role_id: roleId};
+            const data = { username, role_id: roleId };
+            if (!id) data.password = password; 
+
             if (id) {
                 await updateUser(id, data);
             } else {
@@ -37,14 +39,21 @@ const UserForm = () => {
             }
             navigate('/');
         } catch (err) {
-            setError('Something went wrong.');
+            if (err.response?.status === 409) {
+                setError('Username already exists.');
+            } else if (err.response?.data?.error) {
+                setError(err.response.data.error);
+            } else {
+                setError('Something went wrong.');
+            }
         }
     };
 
     return (
         <div>
-            <h2>{id ? 'Edit user': 'Create role'}</h2>
-            {error && <p>{error}</p>}
+            <h2>{id ? 'Edit user' : 'Create user'}</h2>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+
             <form onSubmit={handleSubmit}>
                 <label>Username:</label>
                 <input 
@@ -54,13 +63,17 @@ const UserForm = () => {
                     onChange={(e) => setUsername(e.target.value)}
                 />
 
-                <label>Password:</label>
-                <input 
-                    type="text" 
-                    value={password}
-                    required
-                    onChange={(e) => setPassword(e.target.value)}
-                />
+                {!id && (
+                    <>
+                        <label>Password:</label>
+                        <input 
+                            type="text" 
+                            value={password}
+                            required
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                    </>
+                )}
 
                 <label>Role:</label>
                 <select value={roleId} onChange={(e) => setRoleId(e.target.value)} required>
@@ -71,7 +84,8 @@ const UserForm = () => {
                         </option>
                     ))}
                 </select>
-                <button type="submit">{id ? 'Edit': 'Create'}</button>
+
+                <button type="submit">{id ? 'Update' : 'Create'}</button>
             </form>
         </div>
     );
