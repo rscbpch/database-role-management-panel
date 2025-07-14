@@ -100,6 +100,9 @@ create table subscriber_artist (
 	foreign key (artist_id) references artist(artist_id) on delete cascade 
 );
 
+
+
+-- table for user and role management
 create table roles (
 	role_id int primary key auto_increment,
 	name varchar(255) unique not null
@@ -119,3 +122,16 @@ create table users (
 	role_id int not null,
 	foreign key (role_id) references roles(role_id) on delete cascade
 );
+
+
+
+-- create admin role in dbms
+create role 'admin';
+grant all privileges on music_platform.* to 'admin' with grant option;
+
+-- store admin into table
+insert into roles (name) values ('admin');
+
+insert into role_privilege (role_id, privilege) values 
+(1, 'SELECT'), (1, 'INSERT'), (1, 'UPDATE'), (1, 'DELETE'), (1, 'ALTER');
+
