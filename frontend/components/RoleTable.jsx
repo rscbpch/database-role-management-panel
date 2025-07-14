@@ -17,7 +17,7 @@ const RoleTable = () => {
             deleteRole(id)
                 .then(() => {
                     alert('Role deleted successfully!');
-                    fetchRoles().then(setRoles);  // refresh list
+                    fetchRoles().then(setRoles); 
                 })
                 .catch(() => alert('Failed to delete role'));
         }

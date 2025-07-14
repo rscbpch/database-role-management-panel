@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { fetchRolesWithPrivileges, createUser, updateUser, fetchUserById } from "../services/api";
-import { useParams, useNavigate, useResolvedPath } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const UserForm = () => {
     const { id } = useParams();
