@@ -3,7 +3,7 @@ import RoleForm from "../components/RoleForm";
 const CreateRole = () => {
     return (
         <div>
-            <h1>Create new role</h1>
+            <h1 className="for-form">Create new role</h1>
             <RoleForm />
         </div>
     );

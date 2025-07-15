@@ -50,43 +50,51 @@ const UserForm = () => {
     };
 
     return (
-        <div>
-            <h2>{id ? 'Edit user' : 'Create user'}</h2>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+        <div className="form-container">
+            <div className="form-wrapper">
+                <h2>{id ? 'Edit user' : 'Create user'}</h2>
+                {error && <p className="form-error">{error}</p>}
 
-            <form onSubmit={handleSubmit}>
-                <label>Username:</label>
-                <input 
-                    type="text" 
-                    value={username}
-                    required
-                    onChange={(e) => setUsername(e.target.value)}
-                />
+                <form onSubmit={handleSubmit}>
+                    <label className="title">Username:</label>
+                    <input 
+                        type="text" 
+                        value={username}
+                        required
+                        onChange={(e) => setUsername(e.target.value)}
+                        className="input-text"
+                    />
 
-                {!id && (
-                    <>
-                        <label>Password:</label>
-                        <input 
-                            type="text" 
-                            value={password}
-                            required
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                    </>
-                )}
+                    {!id && (
+                        <>
+                            <label className="title">Password:</label>
+                            <input 
+                                type="text" 
+                                value={password}
+                                required
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="input-text"
+                            />
+                        </>
+                    )}
 
-                <label>Role:</label>
-                <select value={roleId} onChange={(e) => setRoleId(e.target.value)} required>
-                    <option value="">Select a role</option>
-                    {roles.map((role) => (
-                        <option key={role.id} value={role.id}>
-                            {role.name}
-                        </option>
-                    ))}
-                </select>
+                    <label className="title">Role:</label>
+                    <select 
+                        value={roleId} 
+                        onChange={(e) => setRoleId(e.target.value)} 
+                        required
+                    >
+                        <option value="">Select a role</option>
+                        {roles.map((role) => (
+                            <option key={role.id} value={role.id}>
+                                {role.name}
+                            </option>
+                        ))}
+                    </select>
 
-                <button type="submit">{id ? 'Update' : 'Create'}</button>
-            </form>
+                    <button type="submit">{id ? 'Update' : 'Create'}</button>
+                </form>
+            </div>
         </div>
     );
 };

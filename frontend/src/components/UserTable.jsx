@@ -36,7 +36,7 @@ const UserTable = () => {
 
     return (
         <>
-            <table border="1" cellPadding="10" cellSpacing="0" style={{ width: '100%' }}>
+            <table border="1" cellPadding="10" cellSpacing="0">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -55,8 +55,8 @@ const UserTable = () => {
                                 <td>{user.username}</td>
                                 <td>{user.role}</td>
                                 <td>
-                                    <button onClick={() => navigate(`/users/edit/${user.id}`)}>Edit</button>
-                                    <button onClick={() => confirmDelete(user.id)}>Delete</button>
+                                    <button className="edit-button" onClick={() => navigate(`/users/edit/${user.id}`)}>Edit</button>
+                                    <button className="delete-button" onClick={() => confirmDelete(user.id)}>Delete</button>
                                 </td>
                             </tr>
                         ))

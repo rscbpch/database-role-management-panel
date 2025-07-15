@@ -36,8 +36,7 @@ const RoleTable = () => {
 
     return (
         <>  
-            
-            <table border="1" cellPadding="10" cellSpacing="0" style={{ width: '100%' }}>
+            <table border="1" cellPadding="10" cellSpacing="0">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -47,17 +46,20 @@ const RoleTable = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {roles.map(role => (
-                        <tr key={role.id}>
-                            <td>{role.id}</td>
-                            <td>{role.name}</td>
-                            <td>{(role.privileges || []).join(', ')}</td>
-                            <td>
-                                <button onClick={() => navigate(`/roles/edit/${role.id}`)}>Edit</button>
-                                <button onClick={() => confirmDelete(role.id)}>Delete</button>
-                            </td>
-                        </tr>
-                    ))}
+                    {roles.length == 0 ? (
+                        <tr><td colSpan="4">No roles found.</td></tr>
+                    ) : (roles.map(role => (
+                            <tr key={role.id}>
+                                <td>{role.id}</td>
+                                <td>{role.name}</td>
+                                <td>{(role.privileges || []).join(', ')}</td>
+                                <td>
+                                    <button className="edit-button" onClick={() => navigate(`/roles/edit/${role.id}`)}>Edit</button>
+                                    <button className="delete-button" onClick={() => confirmDelete(role.id)}>Delete</button>
+                                </td>
+                            </tr>
+                        ))
+                    )}
                 </tbody>
             </table>
 

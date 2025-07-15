@@ -50,32 +50,39 @@ const RoleForm = () => {
     };
 
     return (
-        <div>
-            <h2>{id ? 'Edit role' : 'Create role'}</h2>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            <form onSubmit={handleSubmit}>
-                <label>Role name:</label>
+        <div className="form-container">
+            <div className="form-wrapper">
+                <h2>{id ? 'Edit role' : 'Create role'}</h2>
+                {error && <p className="form-error">{error}</p>}
+
+                <form onSubmit={handleSubmit}>
+                <label className="title">Role name:</label>
                 <input 
                     type="text" 
                     value={roleName}
                     onChange={(e) => setRoleName(e.target.value)}
                     required
+                    className="input-text"
                 />
-                <div>
-                    <p>Privileges:</p>
+
+                <label className="title">Privileges:</label>
+                <div className="checkbox-group">
                     {allPrivileges.map(priv => (
-                        <label key={priv} style={{ display: 'block' }}>
-                            <input 
-                                type="checkbox" 
-                                checked={privileges.includes(priv)}
-                                onChange={() => handleCheckboxChange(priv)}
-                            />
-                            {priv}
-                        </label>
+                    <label key={priv} className="checkbox-label">
+                        <input 
+                            type="checkbox" 
+                            checked={privileges.includes(priv)}
+                            onChange={() => handleCheckboxChange(priv)}
+                            className="input-box"
+                        />
+                        {priv}
+                    </label>
                     ))}
                 </div>
+
                 <button type="submit">{id ? 'Update' : 'Create'}</button>
-            </form>
+                </form>
+            </div>
         </div>
     );
 };
