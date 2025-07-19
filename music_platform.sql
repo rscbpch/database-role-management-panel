@@ -100,18 +100,26 @@ create table subscriber_artist (
 	foreign key (artist_id) references artist(artist_id)
 );
 
-create table user (
-  id int primary key auto_increment,
-  username varchar(255) not null,
-  password varchar(255) not null,
-  role varchar(255) default 'user'
+
+-- table for user and role management
+create table roles (
+	role_id int primary key auto_increment,
+	name varchar(255) unique not null
 );
 
-create table user_privileges (
-  id int primary key auto_increment,
-  user_id int,
-  privilege varchar(255),
-  foreign key (user_id) references user(id) on delete cascade
+create table role_privilege (
+	id int primary key auto_increment,
+	role_id int not null,
+	privilege varchar(255) not null,
+	foreign key (role_id) references roles(role_id) on delete cascade
+);
+
+create table users (
+	user_id int primary key auto_increment,
+	username varchar(255) unique not null,
+	password varchar(255) not null,
+	role_id int not null,
+	foreign key (role_id) references roles(role_id) on delete cascade
 );
 
 
